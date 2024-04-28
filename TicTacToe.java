@@ -43,8 +43,7 @@ class TicTacToe {
     // Prints current board
     void printBoard() {
         if (ai && turn % 2 == 1 && turn > 1) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            Main.clearScreen();
         }
         System.out.println("\n\n  1 2 3");
         for (int i = 0; i < game.length; i++) {
@@ -123,8 +122,7 @@ class TicTacToe {
         String input = br.readLine().toLowerCase();
         if (input.length() > 0) {
             if (input.charAt(0) == 'y') {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+                Main.clearScreen();
                 return true;
             }
         }
@@ -154,9 +152,7 @@ class TicTacToe {
                     return true;
                 default:
                     System.out.println("\nDraw Declined");
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
-                    return false;
+                    Main.clearScreen();
             }
         }
         return false;
@@ -176,10 +172,8 @@ class TicTacToe {
                 System.out.printf("%n%s Wins by Forfeit%n", getUser());
                 return true;
             }
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            Main.clearScreen();
             printBoard();
-            return false;
         }
         return false;
     }
@@ -219,9 +213,9 @@ class TicTacToe {
 
     // Determine if '-' is still on th board
     boolean isMovesLeft(char[][] board) {
-        for (int i = 0; i < game.length; i++) {
-            for (int z = 0; z < board[i].length; z++) {
-                if (game[i][z] == '-')
+        for (int i = 0; i < game.length; ++i) {
+            for (int j = 0; j < board[i].length; ++j) {
+                if (game[i][j] == '-')
                     return true;
             }
         }
@@ -244,24 +238,24 @@ class TicTacToe {
 
     Pair<Integer, Integer> medium() {
         int x = 0, o = 0, row = -1, col = -1;
-        for (int i = 0; i < game.length; i++) {
-            x = 0;
-            o = 0;
-            for (int j = 0; j < game[i].length; j++) {
-                switch (game[i][j]) {
-                    case 'X':
+        for (int pass = 0; pass < 2; ++pass) {
+            for (int i = 0; i < game.length; ++i) {
+                x = 0;
+                o = 0;
+                row = -1;
+                col = -1;
+                for (int j = 0; j < game[i].length; ++j) {
+                    char mark = (pass == 0) ? game[i][j] : game[j][i];
+                    if (mark == 'X')
                         x++;
-                        break;
-                    case 'O':
+                    else if (mark == 'O')
                         o++;
-                        break;
-                    default:
-                        row = i;
-                        col = j;
-                }
+                    else {
+                        row = (pass == 0) ? i : j;
+                        col = (pass == 0) ? j : i;
+                    }
 
-                if (j >= 2 && (o >= 2 || x >= 2) && (row != -1 && col != -1 && o != 1 && x != 1)) {
-                    if (pickLocation(row, col, true)) {
+                    if (j == game[i].length - 1 && ((x == 2 && o == 0) || (o == 2 && x == 0)) && row != -1) {
                         takeTurn(row, col, true);
                         return new Pair<Integer, Integer>(row, col);
                     }
@@ -269,74 +263,27 @@ class TicTacToe {
             }
         }
 
-        row = -1;
         col = -1;
-
-        for (int i = 0; i < game.length; i++) {
+        row = -1;
+        for (int d = 0; d < 2; ++d) {
             x = 0;
             o = 0;
-            for (int j = 0; j < game[i].length; j++) {
-                switch (game[j][i]) {
-                    case 'X':
-                        x++;
-                        break;
-                    case 'O':
-                        o++;
-                        break;
-                    default:
-                        row = j;
-                        col = i;
+            for (int i = 0; i < game.length; ++i) {
+                int j = (d == 0) ? i : game.length - 1 - i; // Check first or second diagonal
+                char mark = game[i][j];
+                if (mark == 'X')
+                    ++x;
+                else if (mark == 'O')
+                    ++o;
+                else {
+                    row = i;
+                    col = j;
                 }
 
-                if (j >= 2 && (o == 2 || x == 2) && (row != -1 && col != -1 && o != 1 && x != 1)) {
-                    if (pickLocation(row, col, true)) {
-                        takeTurn(row, col, true);
-                        return new Pair<Integer, Integer>(row, col);
-                    }
+                if (i == game.length - 1 && ((x == 2 && o == 0) || (o == 2 && x == 0)) && row != -1) {
+                    takeTurn(row, col, true);
+                    return new Pair<Integer, Integer>(row, col);
                 }
-            }
-        }
-
-        row = -1;
-        col = -1;
-        if (game[2][2] == game[0][0] && game[0][0] != '-') {
-            if (game[1][1] == '-') {
-                row = 1;
-                col = 1;
-            }
-        } else if (game[0][0] == game[1][1] && game[0][0] != '-') {
-            if (game[2][2] == '-') {
-                row = 2;
-                col = 2;
-            }
-        } else if (game[1][1] == game[2][2] && game[2][2] != '-') {
-            if (game[0][0] == '-') {
-                row = 0;
-                col = 0;
-            }
-        }
-
-        if (game[2][0] == game[0][2] && game[2][0] != '-') {
-            if (game[1][1] == '-') {
-                row = 1;
-                col = 1;
-            }
-        } else if (game[2][0] == game[1][1] && game[2][0] != '-') {
-            if (game[0][2] == '-') {
-                row = 0;
-                col = 2;
-            }
-        } else if (game[1][1] == game[0][2] && game[0][2] != '-') {
-            if (game[2][0] == '-') {
-                row = 2;
-                col = 0;
-            }
-        }
-
-        if (row != -1 && col != -1) {
-            if (pickLocation(row, col, true)) {
-                takeTurn(row, col, true);
-                return new Pair<Integer, Integer>(row, col);
             }
         }
         return easy();
@@ -358,8 +305,7 @@ class TicTacToe {
                 }
             }
         }
-        ++turn;
-        game[bestRow][bestCol] = 'O';
+        takeTurn(bestRow, bestCol, true);
         return new Pair<Integer, Integer>(bestRow, bestCol);
     }
 
@@ -387,8 +333,8 @@ class TicTacToe {
 
         if (isMax) { // maximizer turn to determine best possibility for ai
             int best = Integer.MIN_VALUE;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
                     if (board[i][j] == '-') {
                         board[i][j] = 'O'; // Set board to O
                         best = Math.max(best, minimax(board, depth + 1, false)); // Recursive call to determine max
@@ -399,8 +345,8 @@ class TicTacToe {
             return best;
         } else { // Minimizer turn to determine best possibility for user
             int worst = Integer.MAX_VALUE;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
                     if (board[i][j] == '-') {
                         board[i][j] = 'X';
                         worst = Math.min(worst, minimax(board, depth + 1, true)); // Recursive call to get the worst
