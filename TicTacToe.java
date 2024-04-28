@@ -180,18 +180,14 @@ class TicTacToe {
 
     // Checks if input was valid
     int checkValue(String str) throws IOException {
-        int num = 0;
-
         if (str.length() <= 0) {
             System.out.println("Please enter a valid input");
             return -1;
         }
 
         if (str.matches("[0-9]+")) {
-            num = Integer.parseInt(str);
-            if (num == -1) {
-                num = -2;
-            } // Special case
+            int num = Integer.parseInt(str);
+            return num == -1 ? -2 : num ;
         } else {
             str = str.toLowerCase();
 
@@ -208,7 +204,6 @@ class TicTacToe {
             System.out.println("\nPlease enter a number");
             return -1;
         }
-        return num;
     }
 
     // Determine if '-' is still on th board
