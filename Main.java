@@ -30,18 +30,18 @@ public class Main {
                 switch (numPlayer.charAt(0)) {
                     case '1':
                         System.out.print("\nEnter your name: ");
-                        p1 = new Player(ai);
-                        createName(p1);
                         ai = true;
-                        p2 = new ComputerName(ai);
+                        p1 = new Player(false);
+                        createName(p1);
+                        p2 = new Player(true);
                         break;
                     case '2':
                         System.out.print("\nEnter Player 1's name: ");
-                        p1 = new Player(ai);
+                        p1 = new Player(false);
                         createName(p1);
 
                         System.out.print("Enter Player 2's name: ");
-                        p2 = new Player(ai);
+                        p2 = new Player(false);
                         createName(p2);
                         break;
                     default:
@@ -95,7 +95,7 @@ public class Main {
         // While no one has won or board is not filled keep playing
         while (game.checkWin(game.getBoard()) == 0 && game.isMovesLeft(game.getBoard())) {
             if (game.getTurn() % 2 == 0 || !ai) {
-                Integer r = 0, c = 0;
+                int r = 0, c = 0;
                 System.out.printf("%nIt is %s turn%nEnter a row: ", !ai ? game.getUser() : "your");
                 do {
                     String row = br.readLine();
