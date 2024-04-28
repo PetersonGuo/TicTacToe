@@ -13,40 +13,40 @@ public class Main {
 
     // Choose layer names with profanity filter
     public static void main(String[] args) throws IOException {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clearScreen();
         br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println(
                 "TicTacToe!!\nGet Three in a Row\n\nPress CTRL + C at anytime to quit\nType S/Surrender during your turn to surrender\nType T/Tie to offer a tie\n");
 
         // Create Player instances
-        System.out.print("1 Player or 2 Players?(1,2) ");
+        System.out.print("1 Player or 2 Players? (1,2) ");
         String numPlayer;
         do {
             numPlayer = br.readLine();
-            numPlayer = numPlayer.length() <= 0 ? "n" : numPlayer;
-            switch (numPlayer.charAt(0)) {
-                case '1':
-                    System.out.print("\nEnter your name: ");
-                    p1 = new Player(ai);
-                    p1createName();
-                    ai = true;
-                    p2 = new ComputerName(ai);
-                    break;
-                case '2':
-                    System.out.print("\nEnter Player 1's name: ");
-                    p1 = new Player(ai);
-                    p1createName();
+            if (numPlayer.length() <= 0) {
+                System.out.println("\nPlease enter a number\n");
+                continue;
+            } else {
+                switch (numPlayer.charAt(0)) {
+                    case '1':
+                        System.out.print("\nEnter your name: ");
+                        p1 = new Player(ai);
+                        createName(p1);
+                        ai = true;
+                        p2 = new ComputerName(ai);
+                        break;
+                    case '2':
+                        System.out.print("\nEnter Player 1's name: ");
+                        p1 = new Player(ai);
+                        createName(p1);
 
-                    System.out.print("Enter Player 2's name: ");
-                    p2 = new Player(ai);
-                    p2createName();
-                    break;
-                case 'n':
-                    System.out.println("\nPlease enter a number\n");
-                    break;
-                default:
-                    System.out.println("\nPlease enter a valid number\n");
+                        System.out.print("Enter Player 2's name: ");
+                        p2 = new Player(ai);
+                        createName(p2);
+                        break;
+                    default:
+                        System.out.println("\nPlease enter a valid number\n");
+                }
             }
         } while (!(numPlayer.charAt(0) == '1') && !(numPlayer.charAt(0) == '2'));
         gameSetup();
@@ -54,11 +54,9 @@ public class Main {
 
     private static void gameSetup() throws IOException {
         do {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            clearScreen();
 
             game = new TicTacToe(p1.getName(), p2.getName(), ai);
-
             if (ai) {
                 // Set ai difficulty (default is easy)
                 String diff = "e";
@@ -170,17 +168,15 @@ public class Main {
             System.out.println("\nDraw!");
     }
 
-    static void p1createName() throws IOException {
+    private static void createName(Player player) throws IOException {
         String name;
         do {
             name = br.readLine();
-        } while (!p1.checkName(name));
+        } while (!player.checkName(name));
     }
 
-    static void p2createName() throws IOException {
-        String name;
-        do {
-            name = br.readLine();
-        } while (!p2.checkName(name));
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
