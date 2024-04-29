@@ -54,16 +54,6 @@ class TicTacToe {
         }
     }
 
-    void printBoard(char[][] board) {
-        System.out.println("\n\n  1 2 3");
-        for (int i = 0; i < board.length; i++) {
-            System.out.print(i + 1);
-            for (int z = 0; z < board[i].length; z++)
-                System.out.print(" " + board[i][z]);
-            System.out.print(" \n");
-        }
-    }
-
     // Checks if row, col is an empty space or if the space is within the board
     boolean pickLocation(int row, int col, boolean silent) {
         try {
