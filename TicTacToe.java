@@ -54,6 +54,16 @@ class TicTacToe {
         }
     }
 
+    void printBoard(char[][] board) {
+        System.out.println("\n\n  1 2 3");
+        for (int i = 0; i < board.length; i++) {
+            System.out.print(i + 1);
+            for (int z = 0; z < board[i].length; z++)
+                System.out.print(" " + board[i][z]);
+            System.out.print(" \n");
+        }
+    }
+
     // Checks if row, col is an empty space or if the space is within the board
     boolean pickLocation(int row, int col, boolean silent) {
         try {
@@ -130,7 +140,7 @@ class TicTacToe {
     }
 
     // Checks if users enter t or tie to tie the game
-    boolean tie(String str) throws IOException {
+    private boolean tie(String str) throws IOException {
         if (str.charAt(0) == 't') {
             if (ai) {
                 System.out.println("\nYou cannot tie on one player");
@@ -159,7 +169,7 @@ class TicTacToe {
     }
 
     // Confirms if user wants to Withdraw
-    boolean surrender(String str) throws IOException {
+    private boolean surrender(String str) throws IOException {
         if (str.charAt(0) == 's' || str.equals("ff") || str.contains("surr")) {
             System.out.print("\nAre you sure you want to surrender?(y/N) ");
             String yesNo = br.readLine();
@@ -187,7 +197,7 @@ class TicTacToe {
 
         if (str.matches("[0-9]+")) {
             int num = Integer.parseInt(str);
-            return num == -1 ? -2 : num ;
+            return num == -1 ? -2 : num;
         } else {
             str = str.toLowerCase();
 
@@ -285,12 +295,13 @@ class TicTacToe {
     }
 
     Pair<Integer, Integer> hard(char board[][]) {
-        int bestVal = Integer.MIN_VALUE, bestCol = -1, bestRow = -1;
+        double bestVal = Integer.MIN_VALUE;
+        int bestCol = -1, bestRow = -1;
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 if (board[i][j] == '-') {
                     board[i][j] = 'O';
-                    int moveVal = minimax(board, 0, false);
+                    double moveVal = minimax(board, 0, false);
                     board[i][j] = '-';
                     if (moveVal > bestVal) {
                         bestRow = i;
@@ -317,12 +328,8 @@ class TicTacToe {
         return new Pair<Integer, Integer>(positions[num]);
     }
 
-    int expectiMax() {
-        return 0;
-    }
-
     // Minimax algorithm
-    int minimax(char[][] board, int depth, boolean isMax) {
+    private int minimax(char[][] board, int depth, boolean isMax) {
         if (checkWin(board) != 0 || !isMovesLeft(board))
             return checkWin(board);
 
